@@ -1,0 +1,67 @@
+<html lang="zh_cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>油猴自动刷新脚本制作教程演示页面</title>
+  <style>
+    body { margin-top: 20px; text-align: center; }
+    body > div { width: 100%; padding: 20px 0; }
+    .hide { display: none; }
+    .visit-state { font-size: 3em; }
+    .clear-state { font-size: 0.5em; }
+    @media (max-width: 768px) { .visit-state { font-size: 1.5em; } }
+  </style>
+</head>
+<body>
+  <div id="islogout" class="login-state"><a href="javascript:login();">登陆</a></div>
+  <div id="islogin" class="login-state hide">用户 <span id="userid"></span>, <a href="javascript:logout();">退出登陆</a></div>
+  <div class="visit-state">您已访问本页面 <span id="visit-count">0</span> 次</div>
+  <div class="clear-state"><a href="javascript:clearState();">清空访问次数</a></div>
+
+  <script type="text/javascript">
+    var uid = 0
+    var state = JSON.parse(localStorage.getItem('auto-refresh-demo-state') || '{"uid": 0, "login": false, "visit": 0}')
+    state.visit++
+    localStorage.setItem('auto-refresh-demo-state', JSON.stringify(state))
+    if (state.login) {
+      uid = state.uid
+      login()
+    }
+    updateVisitCount()
+
+    function updateVisitCount() {
+      document.getElementById('visit-count').innerText = state.visit
+    }
+
+    function login() {
+      document.getElementById('islogout').classList.add('hide')
+      document.getElementById('islogin').classList.remove('hide')
+      state.login = true
+      if (!state.uid) {
+        state.uid = Math.ceil(Math.random() * 1000)
+      }
+      uid = state.uid
+      localStorage.setItem('state', JSON.stringify(state))
+      document.getElementById('userid').innerText = uid
+      updateVisitCount()
+    }
+
+    function logout() {
+      document.getElementById('islogin').classList.add('hide')
+      document.getElementById('islogout').classList.remove('hide')
+      state.login = false
+      uid = 0
+      localStorage.setItem('auto-refresh-demo-state', JSON.stringify(state))
+    }
+
+    function clearState() {
+      state.visit = 0
+      localStorage.setItem('auto-refresh-demo-state', JSON.stringify(state))
+      updateVisitCount()
+    }
+
+    window.onload = () =>  {
+    }
+  </script>
+</body>
+</html>
