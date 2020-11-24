@@ -41,7 +41,7 @@
         state.uid = Math.ceil(Math.random() * 1000)
       }
       uid = state.uid
-      localStorage.setItem('state', JSON.stringify(state))
+      localStorage.setItem('auto-refresh-demo-state', JSON.stringify(state))
       document.getElementById('userid').innerText = uid
       updateVisitCount()
     }
